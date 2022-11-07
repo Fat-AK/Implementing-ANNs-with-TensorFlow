@@ -32,11 +32,11 @@ class Perceptron():
         self. n_units = n_units
         self. input_units = input_units
         self. biasvector = biasvector 
-        self. weightmatrix = weight
+        self. weightmatrix = weightmatrix
         self. threshold_function = threshold_function
         
     def __call__ (self, input_units:random.uniform(low=0.0, high=1.0, size=10)): 
-        T = self. weightmatrix @ input_units + self. biasvector
+        T = self. weightmatrix * input_units + self. biasvector
         return self.threshold_function(T)
     
 weight = random.uniform(low=1, high=2, size=10)
