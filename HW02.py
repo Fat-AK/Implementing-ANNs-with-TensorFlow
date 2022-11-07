@@ -39,9 +39,9 @@ class Perceptron():
         T = self. weightmatrix @ input_units + self. biasvector
         return self.threshold_function(T)
     
-weight = random.uniform(low=1, high=2, size=10)
+weightmatrix = random.uniform(low=1, high=2, size=10)
 bias = np.zeros (10)
 
 input_units = random.uniform(low=0.0, high=1.0, size=10)
 
-perceptron01 = Perceptron (10, input_units, weight, bias)
+perceptron01 = Perceptron (10, input_units, weightmatrix, bias)
