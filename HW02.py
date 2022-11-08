@@ -20,28 +20,42 @@ plt.show()
 
 # Task02
 
-def threshold (x):
-    if x> 0:
-        return 1
-    else:
-        return 0
+## n_unit = number of units in the layer
+## input_unit= number of unit in preceding Layer
+## 
+class layer():
+    def __init__(self, n_units, input_units, biasvector, weightmatrix, layer_input, layer_preactivation, layer_activation):  
+        self.n_units = n_units
+        self.input_units = input_units
+        self.biasvector = biasvector
+        self.weightmatrix = weightmatrix
+        layer_input = None
+        layer_preactivation = None
+        layer_activation = None
 
-class Perceptron():
-    def __init__(self, n_units, input_units, biasvector, weightmatrix,threshold_function = threshold):  
-        
-        self. n_units = n_units
-        self. input_units = input_units
-        self. biasvector = biasvector 
-        self. weightmatrix = weightmatrix
-        self. threshold_function = threshold_function
-        
-    def __call__ (self, input_units:random.uniform(low=0.0, high=1.0, size=10)): 
-        T = self. weightmatrix @ input_units + self. biasvector
-        return self.threshold_function(T)
+## weightmatrix with dimensions of hidden layer x input layer and random values
+        weightmatrix = np.random.rand(n_units, input_units)
+## added assert to change the shape of the matrix for every layer
+        assert(weightmatrix.shape == (n_units, input_units))
+
+## biasvector with dimensions of hidden layer x 1, since it is a vector, with values of 0
+        bias = np.zeros (n_units, 1)
+        assert(bias.shape == (n_units, 1))
     
-weightmatrix = random.uniform(low=1, high=2, size=10)
-bias = np.zeros (10)
+        def forward_step():
+## z= value of layer without relu threshold
+## z= weight * previous layer + bias
+## might have to include a case when we are in layer 1, since there is no preceding layer
+         layer_preactivation = np.dot(weightmatrix, input_units)
+         layer_activation = np.dot(weightmatrix, input_units) + biasvector
+         return tf.nn.relu(layer_activation)
 
-input_units = random.uniform(low=0.0, high=1.0, size=10)
 
-perceptron01 = Perceptron (10, input_units, weightmatrix, bias)
+## general question: backpropagation via sigmoid or relu
+##def backward_step():   
+##with tf.GradientTape() as tape:
+ ##   tape.watch(weight)
+    ## gradient in respect to weight 
+  ##  dW =
+    ## gradient in respect to bias
+   ## db = 
