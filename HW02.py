@@ -60,3 +60,17 @@ class layer():
   ##  dW =
     ## gradient in respect to bias
    ## db = 
+   
+           def backward_step(): 
+                # layer 1
+                x1 = tf.matmul(x, weightmatrix)
+                # activation function of layer 1
+                x0 = tf.nn.sigmoid(x1)
+                with tf.GradientTape() as tape:
+                        tape.watch([weightmatrix])
+                        x1 = tf.matmul(x, weightmatrix)  # x = input values in task01
+                        x0 = tf.nn.sigmoid(x1)
+                        
+                        x1 = tf.reduce_mean(0.5 * (x0 - t)**2) # mean squared error, t = target in task01
+                        real_grad_weightmatrix = tape.gradient(x1, [weightmatrix])
+                        real_grad_biasvector = tape.gradient(x1, [biasvector])
