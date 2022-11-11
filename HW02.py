@@ -74,3 +74,15 @@ class layer():
                         x1 = tf.reduce_mean(0.5 * (x0 - t)**2) # mean squared error, t = target in task01
                         real_grad_weightmatrix = tape.gradient(x1, [weightmatrix])
                         real_grad_biasvector = tape.gradient(x1, [biasvector])
+                  
+                  
+            def update_weights(weightmatrix, weight_gradients, learning_rate=1e-2):
+                        for w, w_grad in zip(weightmatrix, weight_gradients):
+                                w = w.assign(w - learning_rate*w_grad)
+                        return weightmatrix
+                
+             
+            def update_bias(biasvector, bias_gradients, learning_rate=1e-2):
+                        for w, w_grad in zip(biasvector, bias_gradients):
+                                w = w.assign(w - learning_rate*w_grad)
+                        return biasvector
