@@ -72,8 +72,8 @@ class layer():
                         x0 = tf.nn.sigmoid(x1)
                         
                         x1 = tf.reduce_mean(0.5 * (x0 - t)**2) # mean squared error, t = target in task01
-                        real_grad_weightmatrix = tape.gradient(x1, [weightmatrix])
-                        real_grad_biasvector = tape.gradient(x1, [biasvector])
+                        weight_gradients = tape.gradient(x1, [weightmatrix])
+                        weight_gradients = tape.gradient(x1, [biasvector])
                   
                   
             def update_weights(weightmatrix, weight_gradients, learning_rate=1e-2):
