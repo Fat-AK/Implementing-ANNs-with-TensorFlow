@@ -2,6 +2,7 @@
 
 import numpy as np 
 from numpy import random
+import tensorflow as tf
 
 
 x = random.uniform(low=0.0, high=1.0, size=100) # random numbers as input values 
