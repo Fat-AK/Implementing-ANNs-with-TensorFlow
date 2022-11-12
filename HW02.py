@@ -68,7 +68,7 @@ class layer():
                 x0 = tf.nn.sigmoid(x1)
                 with tf.GradientTape() as tape:
                         tape.watch([weightmatrix])
-                        x1 = tf.matmul(x, weightmatrix)  # x = input values in task01
+                        x1 = tf.matmul(x.transpose(), weightmatrix)  # x = input values in task01
                         x0 = tf.nn.sigmoid(x1)
                         
                         x1 = tf.reduce_mean(0.5 * (x0 - t)**2) # mean squared error, t = target in task01
@@ -86,3 +86,34 @@ class layer():
                         for w, w_grad in zip(biasvector, bias_gradients):
                                 w = w.assign(w - learning_rate*w_grad)
                         return biasvector
+# Task03:
+
+def random_weights(*shape):
+    return np.random.normal(size=shape)
+
+def linear(x):
+    return x
+class MLP(object):
+    
+    def __init__(self, n_inputs):
+        
+        self.layer1 = layer (weights=random_weights(64, n_inputs),
+                                       biases=np.zeros(64))
+        
+        self.layer2 = layer(weights=random_weights(32, 64),
+                                       biases=np.zeros(32))
+        
+        self.layer3 = layer(weights=random_weights(16, 32),
+                                       biases=np.zeros(16))
+        
+        self.outputlayer = layer(weights=random_weights(1, 16),
+                                            biases=np.zeros(1),
+                                            activation_function=linear)
+
+    def __call__(self, x):
+        
+        x = self.layer_1(x)
+        x = self.layer_2(x)
+        x = self.layer_3(x)
+        
+        return self.output_layer(x)
