@@ -104,6 +104,7 @@ optimizer = tf.keras.optimizers.SGD(learning_rate)
 # Initialize lists for visualization.
 train_losses = []
 test_losses = []
+train_accuracies = []
 test_accuracies = []
 
 #testing 
@@ -132,3 +133,14 @@ for epoch in range(num_epochs):
     test_loss, test_accuracy = test(model, test_dataset, cross_entropy_loss)
     test_losses.append(test_loss)
     test_accuracies.append(test_accuracy)
+
+    
+#Task 2.5
+def visualization(train_losses , train_accuracies , test_losses , test_accuracies):
+  plt.figure()
+  line1 , = plt.plot(train_losses , "b-")
+  line2 , = plt.plot(test_losses , "r-") line3 , = plt.plot(train_accuracies , "b:")
+  line4 , = plt.plot(test_accuracies , "r:") plt.xlabel("Training steps")
+  plt.ylabel("Loss/Accuracy")
+  plt.legend((line1, line2, line3, line4), ("training loss", "test loss", "train accuracy", "test accuracy"))
+  plt.show()
