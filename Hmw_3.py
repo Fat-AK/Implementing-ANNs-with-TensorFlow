@@ -14,5 +14,8 @@ import tensorflow as tf
 #What range are pixel values in?
 # 28×28 pixel grayscale.
 
+tfds.show_examples(train_ds , ds_info)
+print(ds_info)
+
 #Task 2.2
 
