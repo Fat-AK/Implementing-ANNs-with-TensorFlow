@@ -136,11 +136,14 @@ for epoch in range(num_epochs):
 
     
 #Task 2.5
-def visualization(train_losses , train_accuracies , test_losses , test_accuracies):
-  plt.figure()
-  line1 , = plt.plot(train_losses , "b-")
-  line2 , = plt.plot(test_losses , "r-") line3 , = plt.plot(train_accuracies , "b:")
-  line4 , = plt.plot(test_accuracies , "r:") plt.xlabel("Training steps")
-  plt.ylabel("Loss/Accuracy")
-  plt.legend((line1, line2, line3, line4), ("training loss", "test loss", "train accuracy", "test accuracy"))
-  plt.show()
+import matplotlib.pyplot as plt
+
+plt.figure()
+line1 , = plt.plot(train_losses , "b-")
+line2 , = plt.plot(test_losses , "r-") 
+line3 , = plt.plot(train_accuracies , "b:")
+line4 , = plt.plot(test_accuracies , "r:") 
+plt.xlabel("Training steps")
+plt.ylabel("Loss/Accuracy")
+plt.legend((line1, line2, line3, line4), ("training loss", "test loss", "train accuracy", "test accuracy"))
+plt.show()
