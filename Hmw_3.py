@@ -147,3 +147,25 @@ plt.xlabel("Training steps")
 plt.ylabel("Loss/Accuracy")
 plt.legend((line1, line2, line3, line4), ("training loss", "test loss", "train accuracy", "test accuracy"))
 plt.show()
+
+
+#Task 3.0
+
+# Onour main training data we have number of epochs = 10, learning rate =0.1. Both of them are small numbers so we can see that test loss and training are parallel to each other.
+# Now if we increase the number of epochs and also learning rate as follow: number of epochs =20, learning rate =50. 
+#As the learning is quite big so we can see both the training loss and test loss increase rapidly and accuracy reduces to almost zero.
+
+# Now we, increase the number of epochs but keep the learning rate as initial value.
+# Here, number of epochs = 20, learning rate = 0.1
+#Because of increased number of epochs compared to step 1, the model learns better so we can see cross section between training loss and test loss lines and also test loss is lower than training loss after about 40% of training steps.
+
+# Now, we increase the number of epochs and decrease the learning rate ( a kind of ideal state for model to learn.
+# Here, number of epochs = 200, learning rate = 0.001
+#Upon changing the hyper-parameters to the mentioned values we can see that lower limit of test loss at 100% of training steps approaches to 0%. Also we see that the cross-section between test loss and training loss has shifted from 40% to 15%. The accuracy also approaches to 1 (i.e. 100%). 
+
+#Now, we exponentially increase and decrease the number of epochs and the learning rate respectively.
+# Here, number of epochs  = 10000, learning rate = 0.0001
+#As too much increase and decrease in the hyper-parameters also results in bad learning of model, the example in this step shows the same.
+#We can see both lower limit of training loss and test loss at 100% of the training steps got increased by significant amount, which means that the model will produce more loss as compared to parameters taken in above steps i.e. model is learning badly.
+
+
