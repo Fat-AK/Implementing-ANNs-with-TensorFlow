@@ -1,8 +1,17 @@
+#Task 2
+# In the first section we import the necessary packages for loading the MNIST dataset and building a neural network.    
+
 import tensorflow_datasets as tfds
+
+ 
+
 import tensorflow as tf
+
+# Here we define a preprocessing function that can be used to format the data for either of the two subtasks. This function takes as input a dataset and a condition, and outputs a dataset that is formatted according to the specified condition. 
 
 (train_ds, test_ds), ds_info = tfds.load('mnist', split=['train', 'test'], as_supervised=True, with_info=True)
 
+#Here we define a train function that can be used to train a neural network for either of the two subtasks. This function takes as input a subtask and an optimizer, and outputs a trained neural network.
  
 
 def preprocessing_fn(ds, condition):
@@ -21,7 +30,7 @@ def preprocessing_fn(ds, condition):
 
     
 
-    
+#In this section we use the train function to train a neural network for the subtask of subtracting two MNIST digits.
 
 def train_fn(subtask, optimizer):
 
@@ -110,17 +119,13 @@ def train_fn(subtask, optimizer):
     )
 
     
+#In this secion we use the train function to train a neural network for the subtask of determining whether the sum of two MNIST digits is greater than five.
+    
 
 train_fn('subtraction', tf.keras.optimizers.Adam())
 
 train_fn('larger_than_five', tf.keras.optimizers.Adam()) 
-
-#The first section imports the necessary packages for loading the MNIST dataset and building a neural network.
-
-#The second section defines a preprocessing function that can be used to format the data for either of the two subtasks. This function takes as input a dataset and a condition, and outputs a dataset that is formatted according to the specified condition.
-
-# The third section defines a train function that can be used to train a neural network for either of the two subtasks. This function takes as input a subtask and an optimizer, and outputs a trained neural network.
-
-#The fourth section uses the train function to train a neural network for the subtask of subtracting two MNIST digits.
-
-# The fifth section uses the train function to train a neural network for the subtask of determining whether the sum of two MNIST digits is greater than five.
+                                                                                                    
+                                                                                                    
+                                                                                             
+                                  
