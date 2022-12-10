@@ -9,3 +9,6 @@ To optimize the model, we can use different techniques such as ResNet or DenseNe
 4. Dropout: This technique involves randomly dropping out a subset of the neurons in each layer during training. This can help to avoid overfitting and improve the generalization performance of the model.
 
 5. Weight regularization: This technique involves adding a penalty term to the loss function based on the magnitude of the weights of the model. This can help to avoid overfitting and improve the generalization performance of the model.
+
+
+As for teh comparing data to our previous homework model , we can quiet compare as we didn't do super well on our model and still needed to work on it , tehrefore we changed more on this model.
