@@ -20,6 +20,12 @@ train_dataset = train_dataset.cache()
 test_dataset = tf.data.Dataset.from_tensor_slices((x_test, y_test))
 test_dataset = test_dataset.cache()
 
+# Sample a batch of data from the training set
+batch_size = 32
+train_dataset = train_dataset.shuffle(buffer_size=1024).batch(batch_size)
+
+# Import the necessary layers and optimizers
+from tensorflow.keras import layers, optimizers
 #Visualize and sample the data to check if it has been preprocessed correctly.
 import matplotlib.pyplot as plt
 
