@@ -55,35 +55,24 @@ model = tf.keras.Sequential([
 kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
     layers.BatchNormalization(),
     layers.Activation('relu'),
-    layers.Conv2D(32, 3, padding='same',                                                                                              
+    layers.Conv2D(32, 3, padding='same',
 kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
     layers.BatchNormalization(),
     layers.Activation('relu'),
     layers.MaxPool2D(),
     layers.Dropout(0.25),
-    layers.Conv2D(64, 3, padding='same', 
+    layers.Conv2D(64, 3, padding='same',
 kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
     layers.BatchNormalization(),
     layers.Activation('relu'),
-    layers.Conv2D(64, 3, padding='same', 
-kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
-    layers.BatchNormalization(),
-    layers.Activation('relu'),
-    layers.MaxPool2D(),
-    layers.Dropout(0.25),
-    layers.Conv2D(128, 3, padding='same', 
-kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
-    layers.BatchNormalization(),
-    layers.Activation('relu'),
-    layers.Conv2D(128, 3, padding='same', 
+    layers.Conv2D(64, 3, padding='same',
 kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
     layers.BatchNormalization(),
     layers.Activation('relu'),
     layers.MaxPool2D(),
     layers.Dropout(0.25),
-    layers.Flatten(),
-    layers.Dense(10, activation='softmax')
-])
+
+
 
 # defining the training loop function
 def train_loop(model, dataset, epochs, optimizer):
