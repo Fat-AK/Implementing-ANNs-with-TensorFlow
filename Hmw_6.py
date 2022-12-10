@@ -79,3 +79,56 @@ kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
     layers.Dense(10, activation='softmax')
 ])
 
+# defining the training loop function
+def train_loop(model, dataset, epochs, optimizer):
+  for epoch in range(epochs):
+    # Iterate over the dataset
+    for x, y in dataset:
+      # Open a GradientTape
+      with tf.GradientTape() as tape:
+        # Forward pass
+        logits = model(x)
+        # Compute the loss
+        loss_value = loss(y, logits)
+        # Compute the gradients
+        gradients = tape.gradient(loss_value, model.trainable_variables)
+        # Apply the gradients to the model
+        optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+        
+ #To define the hyperparameters, you can specify the learning rate, batch size, and number of epochs to train for. For example:
+learning_rate = 0.001
+batch_size = 32
+epochs = 15
+
+#define loss function
+loss = tf.keras.losses.CategoricalCrossentropy()
+
+#define optimizer
+optimizer = tf.keras.optimizers.Adam(learning_rate)
+
+#store loss and accuracy
+# Create metric objects for tracking the loss and accuracy
+train_loss = tf.keras.metrics.Mean()
+train_accuracy = tf.keras.metrics.Mean()
+test_loss = tf.keras.metrics.Mean()
+test_accuracy = tf.keras.metrics.Mean()
+
+# In the training loop
+for x, y in train_dataset:
+  # Forward pass and loss computation
+  logits = model(x)
+  loss_value = loss(y, logits)
+  
+  # Update the metrics
+  train_loss.update_state(loss_value)
+  train_accuracy.update_state(y, logits)
+  
+# After the training loop
+print(f'Training loss: {train_loss.result():.4f}')
+print(f'Training accuracy: {train_accuracy.result():.4f}')
+
+# Import the necessary layers and optimizers
+from tensorflow.keras import layers, optimizers
+
+
+
