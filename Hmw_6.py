@@ -1,33 +1,25 @@
-#Import the required libraries and the CIFAR-10 data set from TensorFlow.
+# Import the required libraries and the CIFAR-10 data set from TensorFlow.
 import tensorflow as tf
 from tensorflow.keras.datasets import cifar10
 
-#Load the data set and split it into training and test sets.
+# Load the data set and split it into training and test sets.
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
-#Convert the data to floating point numbers and normalize the input data by dividing by 255. This will scale the data so that each pixel has a value between 0 and 1.
+# Convert the data to floating point numbers and normalize the input data by dividing by 255. 
+# This will scale the data so that each pixel has a value between 0 and 1.
 x_train = x_train.astype('float32') / 255
 x_test = x_test.astype('float32') / 255
 
-#Use the TensorFlow function tf.one_hot to convert the target vectors to one-hot encoded vectors.
+# Use the TensorFlow function tf.one_hot to convert the target vectors to one-hot encoded vectors.
 y_train = tf.one_hot(y_train, depth=10)
 y_test = tf.one_hot(y_test, depth=10)
 
-#Cache the preprocessed data in memory to speed up future access.
+# Cache the preprocessed data in memory to speed up future access.
 train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train))
 train_dataset = train_dataset.cache()
 
 test_dataset = tf.data.Dataset.from_tensor_slices((x_test, y_test))
 test_dataset = test_dataset.cache()
-
-# Sample a batch of data from the training set
-batch_size = 32
-train_dataset = train_dataset.shuffle(buffer_size=1024).batch(batch_size)
-
-# Import the necessary layers and optimizers
-from tensorflow.keras import layers, optimizers
-#Visualize and sample the data to check if it has been preprocessed correctly.
-import matplotlib.pyplot as plt
 
 # Visualize a sample from the training set
 sample_idx = 0
@@ -38,13 +30,6 @@ plt.imshow(sample_image)
 plt.title(sample_label)
 plt.show()
 
-# Sample a batch of data from the training set
-batch_size = 32
-train_dataset = train_dataset.shuffle(buffer_size=1024).batch(batch_size)
-for images, labels in train_dataset.take(1):
-  print(images.shape, labels.shape)
-
-  
 # Import the necessary layers and optimizers
 from tensorflow.keras import layers, optimizers
 
@@ -52,76 +37,61 @@ from tensorflow.keras import layers, optimizers
 model = tf.keras.Sequential([
     layers.Reshape((32, 32, 3), input_shape=(32, 32, 3)),
     layers.Conv2D(32, 3, padding='same', 
-kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
+                  kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
     layers.BatchNormalization(),
     layers.Activation('relu'),
     layers.Conv2D(32, 3, padding='same',
-kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
+                  kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
     layers.BatchNormalization(),
     layers.Activation('relu'),
     layers.MaxPool2D(),
     layers.Dropout(0.25),
     layers.Conv2D(64, 3, padding='same',
-kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
+                  kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
     layers.BatchNormalization(),
-    layers.Activation('relu'),
-    layers.Conv2D(64, 3, padding='same',
-kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
-    layers.BatchNormalization(),
-    layers.Activation('relu'),
-    layers.MaxPool2D(),
-    layers.Dropout(0.25),
 
+#To train the network and define a training loop function,
+batch_size = 128
+learning_rate = 1e-3
+num_epochs = 15
 
-
-# defining the training loop function
-def train_loop(model, dataset, epochs, optimizer):
-  for epoch in range(epochs):
-    # Iterate over the dataset
-    for x, y in dataset:
-      # Open a GradientTape
-      with tf.GradientTape() as tape:
-        # Forward pass
-        logits = model(x)
-        # Compute the loss
-        loss_value = loss(y, logits)
-        # Compute the gradients
-        gradients = tape.gradient(loss_value, model.trainable_variables)
-        # Apply the gradients to the model
-        optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-        
- #To define the hyperparameters, you can specify the learning rate, batch size, and number of epochs to train for. For example:
-learning_rate = 0.001
-batch_size = 32
-epochs = 15
+#Create an optimizer object using the Adam optimizer with the specified learning rate.
+optimizer = optimizers.Adam(learning_rate)
 
 #define loss function
-loss = tf.keras.losses.CategoricalCrossentropy()
+loss_fn = tf.losses.CategoricalCrossentropy()
 
-#define optimizer
-optimizer = tf.keras.optimizers.Adam(learning_rate)
+#define metrick to track the accuracy of the modle on the test set
+train_acc_metric = tf.metrics.CategoricalAccuracy()
+test_acc_metric = tf.metrics.CategoricalAccuracy()
 
-#store loss and accuracy
-# Create metric objects for tracking the loss and accuracy
-train_loss = tf.keras.metrics.Mean()
-train_accuracy = tf.keras.metrics.Mean()
-test_loss = tf.keras.metrics.Mean()
-test_accuracy = tf.keras.metrics.Mean()
+#define the function to that we will use to test the model:
+def train_loop(model, optimizer, loss_fn, train_dataset, test_dataset):
+  for epoch in range(num_epochs):
+    # Reset the metrics at the start of each epoch
+    train_acc_metric.reset_states()
+    test_acc_metric.reset_states()
 
-# In the training loop
-for x, y in train_dataset:
-  # Forward pass and loss computation
-  logits = model(x)
-  loss_value = loss(y, logits)
-  
-  # Update the metrics
-  train_loss.update_state(loss_value)
-  train_accuracy.update_state(y, logits)
-  
-# After the training loop
-print(f'Training loss: {train_loss.result():.4f}')
-print(f'Training accuracy: {train_accuracy.result():.4f}')
+    # Train the model on the training set
+    for x_batch, y_batch in train_dataset:
+      with tf.GradientTape() as tape:
+        logits = model(x_batch, training=True)
+        loss_value = loss_fn(y_batch, logits)
+      grads = tape.gradient(loss_value, model.trainable_weights)
+      optimizer.apply_gradients(zip(grads, model.trainable_weights))
+      train_acc_metric.update_state(y_batch, logits)
 
+    # Evaluate the model on the test set
+    for x_batch, y_batch in test_dataset:
+      logits = model(x_batch, training=False)
+      test_acc_metric.update_state(y_batch, logits)
+
+    # Print the loss and accuracy on the training and test sets
+    print('Epoch: {}, Loss: {:.4f}, Train Acc: {:.4f}, Test Acc: {:.4f}'.format(
+        epoch, loss_value, train_acc_metric.result(), test_acc_metric.result()))
+
+#call the function to train the model 
+train_loop(model, optimizer, loss_fn, train_dataset, test_dataset)
 
 
 
