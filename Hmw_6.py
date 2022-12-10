@@ -37,3 +37,45 @@ batch_size = 32
 train_dataset = train_dataset.shuffle(buffer_size=1024).batch(batch_size)
 for images, labels in train_dataset.take(1):
   print(images.shape, labels.shape)
+
+  
+# Import the necessary layers and optimizers
+from tensorflow.keras import layers, optimizers
+
+# Use the ResNet50 architecture with weight regularization, batch normalization, and dropout
+model = tf.keras.Sequential([
+    layers.Reshape((32, 32, 3), input_shape=(32, 32, 3)),
+    layers.Conv2D(32, 3, padding='same', 
+kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
+    layers.BatchNormalization(),
+    layers.Activation('relu'),
+    layers.Conv2D(32, 3, padding='same',                                                                                              
+kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
+    layers.BatchNormalization(),
+    layers.Activation('relu'),
+    layers.MaxPool2D(),
+    layers.Dropout(0.25),
+    layers.Conv2D(64, 3, padding='same', 
+kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
+    layers.BatchNormalization(),
+    layers.Activation('relu'),
+    layers.Conv2D(64, 3, padding='same', 
+kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
+    layers.BatchNormalization(),
+    layers.Activation('relu'),
+    layers.MaxPool2D(),
+    layers.Dropout(0.25),
+    layers.Conv2D(128, 3, padding='same', 
+kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
+    layers.BatchNormalization(),
+    layers.Activation('relu'),
+    layers.Conv2D(128, 3, padding='same', 
+kernel_regularizer=tf.keras.regularizers.l2(1e-4)),
+    layers.BatchNormalization(),
+    layers.Activation('relu'),
+    layers.MaxPool2D(),
+    layers.Dropout(0.25),
+    layers.Flatten(),
+    layers.Dense(10, activation='softmax')
+])
+
