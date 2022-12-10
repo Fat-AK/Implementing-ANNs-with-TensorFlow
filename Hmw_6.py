@@ -92,7 +92,53 @@ def train_loop(model, optimizer, loss_fn, train_dataset, test_dataset):
 
 #call the function to train the model 
 train_loop(model, optimizer, loss_fn, train_dataset, test_dataset)
+    
+    
+    
+import matplotlib.pyplot as plt
 
+#Define a function to visualize the performance of the model
 
+def visualize_performance(history):
+
+#Get the accuracy values from the history object
+
+acc = history.history['categorical_accuracy']
+val_acc = history.history['val_categorical_accuracy']
+
+#Get the loss values from the history object
+
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+
+#Get the number of epochs
+
+epochs = range(1, len(acc) + 1)
+
+#Plot the training and validation accuracy
+
+plt.plot(epochs, acc, 'bo', label='Training accuracy')
+plt.plot(epochs, val_acc, 'b', label='Validation accuracy')
+plt.title('Training and validation accuracy')
+plt.legend()
+
+plt.figure()
+
+#Plot the training and validation loss
+
+plt.plot(epochs, loss, 'bo', label='Training loss')
+plt.plot(epochs, val_loss, 'b', label='Validation loss')
+plt.title('Training and validation loss')
+plt.legend()
+
+plt.show()
+
+#Train the model and get the training history
+
+history = train_loop(model, optimizer, loss_fn, train_dataset, test_dataset)
+
+#Visualize the model's performance
+
+visualize_performance(history)
 
 
