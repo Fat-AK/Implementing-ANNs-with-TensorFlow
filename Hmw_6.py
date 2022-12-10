@@ -133,8 +133,7 @@ for x, y in train_dataset:
 print(f'Training loss: {train_loss.result():.4f}')
 print(f'Training accuracy: {train_accuracy.result():.4f}')
 
-# Import the necessary layers and optimizers
-from tensorflow.keras import layers, optimizers
+
 
 
 
