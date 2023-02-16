@@ -1,42 +1,39 @@
 import tensorflow as tf
+import numpy as np
 import tensorflow_text as text
 import sentencepiece as sp
-import numpy as np
 import io
-import datetime
 import tqdm
 
-# Load the Bible dataset
+# load the dataset
 with open('bible.txt', 'r') as f:
     bible = f.read()
 
-# Train a sentencepiece tokenizer on the Bible dataset
+# train the tokenizer and save it to a file
 sp.SentencePieceTrainer.train(
     input='bible.txt', model_prefix='tokenizer_model', model_type="unigram", vocab_size=4096)
 
-# Load the trained tokenizer model
-trained_tokenizer_model = tf.io.gfile.GFile('tokenizer_model.model', "rb").read()
-tokenizer = text.SentencepieceTokenizer(
-    model=trained_tokenizer_model, out_type=tf.int32, nbest_size=-1, alpha=1, reverse=False,
-    add_bos=False, add_eos=False, return_nbest=False, name=None)
+# load the trained tokenizer from file
+trained_tokenizer_model = io.open('tokenizer_model.model', mode='rb').read()
+tokenizer = text.SentencepieceTokenizer(model=trained_tokenizer_model, out_type=tf.int32)
 
-# Encode the Bible text with the tokenizer
+# encode the text using the tokenizer
 tokenized_text = tokenizer.tokenize(bible)
 
-# Set the window size and slide it over the text to generate input and target sequences
+# split the text into windows
 window_size = 64
 data = text.sliding_window(tokenized_text, window_size + 1, axis=0)
 inputs = data[:, :window_size]
-targets = data[:, 1:]
+targets = data[:, 1:window_size + 1]
 
-# Shuffle and batch the data
+# create a dataset
 batch_size = 64
 buffer_size = 10000
 dataset = tf.data.Dataset.from_tensor_slices((inputs, targets))
 dataset = dataset.shuffle(buffer_size).batch(batch_size, drop_remainder=True)
 dataset = dataset.cache().prefetch(buffer_size=tf.data.AUTOTUNE)
 
-# Define the model
+# define the model architecture
 embedding_size = 128
 
 class Embedder(tf.keras.layers.Layer):
@@ -81,6 +78,10 @@ class Model(tf.keras.Model):
         self.tokenizer = tokenizer
         self.optimizer = tf.keras.optimizers.Adam()
         self.loss_function = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.metrics_list = [
-            tf.keras.metrics.Mean(name="loss"),
-            tf.keras.metrics.SparseC
+
+        # define the metrics
+        self.loss_metric = tf.keras.metrics.Mean(name="loss")
+        self.acc_metric = tf.keras.metrics.SparseCategoricalAccuracy(name="acc")
+        self.top_k_acc_metric = tf.keras.metrics.SparseTopKCategoricalAccuracy(10, name="top_10_acc")
+
+       
